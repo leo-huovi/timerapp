@@ -1,9 +1,13 @@
 // The package declaration specifies the location of the file within the project's directory structure.
+// When developing a timer app, it's essential to keep the project's directory structure well-organized.
+// You may want to create separate directories for different components, such as activities, layouts (XML files), drawables, values,
+// and Kotlin files. This helps maintain a clear separation of concerns and
+// makes it easier to find and manage code related to specific functionalities.
 package com.example.timerapp
 
 // Import the required classes and functions from different packages.
 
-// The `android.os.Bundle` class is used to pass data between different activities in Android.
+// The `android.os.Bundle` class is used to pass data between different activities in Android. In Android, activities are components that represent the user interface and screen interactions. When you need to pass data from one activity to another, you can use a Bundle. A Bundle is a key-value collection that allows you to store and retrieve data. It's commonly used when starting a new activity using an intent. Passed as an argument whenever onCreate is called.
 import android.os.Bundle
 
 // The `androidx.activity.ComponentActivity` class is a base class for activities that use the AndroidX library.
