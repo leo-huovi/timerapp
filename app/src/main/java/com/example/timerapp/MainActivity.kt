@@ -19,6 +19,58 @@ import com.example.timerapp.ui.theme.TImerAppTheme
 // - private functions
 // onStart,
 
+package com.example.timerapp
+
+import android.content.Intent
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.*
+import androidx.compose.ui.res.stringResource
+
+import com.example.timerapp.ui.theme.TImerAppTheme
+
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        setContent {
+            TImerAppTheme {
+                Surface {
+                    TimerApp()
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun TimerApp() {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        // Timer app UI elements here...
+        Button(
+            onClick = { startTimerService() },
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(text = stringResource(id = R.string.start_service_button_label))
+        }
+    }
+}
+
+fun startTimerService() {
+    val intent = Intent(this, AlarmService::class.java)
+    intent.action = "START_TIMER"
+    startService(intent)
+}
+
+
 // Service:
 // - private variables :  constants, properties (objects, integers, booleans)
 // - private functions
@@ -30,10 +82,15 @@ import com.example.timerapp.ui.theme.TImerAppTheme
 // onStartCommand(): This method is also overridden from the base Service class. It is called when the service is started. (It handles the incoming start request and allows you to perform the desired functionality based on the intent data (extras) passed to the service.) (It itself does not "launch" the service. It is called to handle each start request, and it is executed by the Android system.)
 
 // Service called automatically when activity is launched:
-
+// MainActivity, super, setContentView
+//        startService(Intent(this, MyService::class.java))
 // Service called when a button is pressed:
+// MainActivity, super, setContentView
+// val btnStartService: Button = findViewById(R.id.btnStartService)
+// btnStartService.setOnClickListener {startService(Intent(this, MyService::class.java))}
 
 
+// @composable functions play a role in defining the UI elements within an activity or fragment, and they can be influenced by the lifecycle of the hosting component.
 
 val startServiceButton = findViewById<Button>(R.id.startServiceButton)
 
