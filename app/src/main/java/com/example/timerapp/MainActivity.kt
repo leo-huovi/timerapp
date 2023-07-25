@@ -14,8 +14,20 @@ import com.example.timerapp.ui.theme.TImerAppTheme
 
 
 
-// WorkManager is a recommended solution for running background tasks, especially those that need to be executed even when the app is in the background or the device is in a doze or idle state. Unlike foreground services, WorkManager provides a more efficient and battery-friendly way to schedule and execute background tasks. It is suitable for deferrable tasks that do not require exact timing and can be optimized for battery life and system resources.  WorkManager uses various scheduling strategies, such as minimum latency, backoff, and constraints, to determine the best time to execute tasks based on factors like device charging status, network connectivity, and device idle state.
-// AlarmManager  is suitable for tasks that require precise timing or need to be executed at specific times, such as setting reminders, notifications, or periodic data syncing. AlarmManager can schedule one-time or repeating alarms with different levels of precision, depending on the method used (set, setExact, setRepeating, etc.).
+//Activity:
+// - private variables :  constants, properties (objects, integers, booleans)
+// - private functions
+// onStart,
+
+// Service:
+// - private variables :  constants, properties (objects, integers, booleans)
+// - private functions
+//  !!!!!!!!!!!!!!                  onCreate and onStartCommand are lifecycle callback methods for Android services, and  are automatically called by the Android system when the service is started. They are not meant to be called manually from the activity or any other component of the application.
+// They are called automatically, when an intent with the service class's name is passed to start Service:
+// val intent = Intent(this, MyService::class.java) ; startService(intent)
+// !!!!!!!!!!!!!!!
+//  onCreate(): This method is overridden from the base Service class. It is called when the service is created and used to perform initial setup. (onCreate does not receive any intent extras or data.) ( If the service was already running and gets started again, onCreate will not be called again, and the service will continue running in the same instance.)
+// onStartCommand(): This method is also overridden from the base Service class. It is called when the service is started. (It handles the incoming start request and allows you to perform the desired functionality based on the intent data (extras) passed to the service.) (It itself does not "launch" the service. It is called to handle each start request, and it is executed by the Android system.)
 
 
 class AlarmService : Service() {
@@ -64,8 +76,25 @@ class AlarmService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+
+        //What did we learn in 20 minutes?
+        //Intents can have string as extras, or they an have nothing (???) yet we pass them into services, on start
+        // Are intents the variables we pass into a starting service, to customize it? NO, they are the addresses to servicse/acitivies
+
+        //     Starting Activities: You can use an intent to launch another activity within your application or even in another application.
+        //    Starting Services: Intents can be used to start and communicate with background services, allowing you to perform long-running tasks or operations even when the app is not actively running.
+        //    Sending and Receiving Broadcasts: Intents can be used to send and receive broadcasts to/from different components in your app or even to other apps.
+
+        // // Start the service using an explicit intent
+        //        val intent = Intent(this, MyService::class.java) <--- intent is a parcel of an address of an intent
+        //        startService(intent)
+        // In summary, while activities can be launched without explicit intents if defined as the main entry point in the AndroidManifest.xml, services are typically started using explicit intents by specifying the target service class when calling startService().
+
+        //  Intents can be thought of as parcels containing information about the target component (activity, service, broadcast receiver) and can carry additional data (like a parcel), but they don't necessarily represent the "address" of a service.
         if (intent?.action == "START_TIMER") {
             startForegroundService()
+            // To start the Service, you can use startService(Intent) method. This method takes an Intent that identifies which Service to start. You can pass any necessary data to the Service using Intent extras.
+            // Ensure you handle the Service's lifecycle appropriately. The Service's lifecycle can be controlled by calling startService(Intent) and stopService(Intent) or by the system when the Service is no longer needed.
             startCountdown()
         }
         return START_NOT_STICKY
@@ -91,7 +120,11 @@ class AlarmService : Service() {
         //    Foreground services show a persistent notification in the notification bar while they are running, which informs the user about the ongoing operation and helps prevent the Android system from killing the service due to low memory conditions.
         //    Foreground services are typically used to perform tasks that are critical to the user experience and require continuous execution, even when the app is in the background. They are bound to the lifecycle of the app, and if the app is closed or removed from the recent apps list, the foreground service will be terminated as well.
         val notificationIntent = Intent(this, MainActivity::class.java)
+        // The first line creates an Intent targeting MainActivity, and the second line wraps that Intent into a PendingIntent for use in a notification."
         val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0)
+        // The PendingIntent.getActivity() method is used to obtain a PendingIntent object that represents the activity to be launched when the notification is clicked.
+        // creating a simple PendingIntent for launching an activity, as shown in the code, is a common use case and relatively straightforward
+        // the choice of request code (0 in this case) is important when working with multiple PendingIntent instances.
 
         // In all cases, the this keyword refers to the current instance of the AlarmService class, which is the immediate scope where the this keyword is used. It is used to provide the necessary context required for various operations, such as creating a MediaPlayer, building notifications, and creating explicit Intents to start activities.
 
@@ -171,3 +204,8 @@ class AlarmService : Service() {
 //            intent.putExtra("EXTRA_MESSAGE", "Hello from MainActivity using Intent Extra!")
 
 // In summary, savedInstanceState is used to save and restore the state of an activity during configuration changes or when the system recreates the activity, while Intent is used to communicate between different components in your app and can carry data to be passed between these components. They have different purposes and are not interchangeable.
+
+
+
+// WorkManager is a recommended solution for running background tasks, especially those that need to be executed even when the app is in the background or the device is in a doze or idle state. Unlike foreground services, WorkManager provides a more efficient and battery-friendly way to schedule and execute background tasks. It is suitable for deferrable tasks that do not require exact timing and can be optimized for battery life and system resources.  WorkManager uses various scheduling strategies, such as minimum latency, backoff, and constraints, to determine the best time to execute tasks based on factors like device charging status, network connectivity, and device idle state.
+// AlarmManager  is suitable for tasks that require precise timing or need to be executed at specific times, such as setting reminders, notifications, or periodic data syncing. AlarmManager can schedule one-time or repeating alarms with different levels of precision, depending on the method used (set, setExact, setRepeating, etc.).
