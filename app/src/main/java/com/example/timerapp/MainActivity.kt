@@ -29,6 +29,22 @@ import com.example.timerapp.ui.theme.TImerAppTheme
 //  onCreate(): This method is overridden from the base Service class. It is called when the service is created and used to perform initial setup. (onCreate does not receive any intent extras or data.) ( If the service was already running and gets started again, onCreate will not be called again, and the service will continue running in the same instance.)
 // onStartCommand(): This method is also overridden from the base Service class. It is called when the service is started. (It handles the incoming start request and allows you to perform the desired functionality based on the intent data (extras) passed to the service.) (It itself does not "launch" the service. It is called to handle each start request, and it is executed by the Android system.)
 
+// Service called automatically when activity is launched:
+
+// Service called when a button is pressed:
+
+
+
+val startServiceButton = findViewById<Button>(R.id.startServiceButton)
+
+startServiceButton.setOnClickListener {
+    // Start the MyService service when the button is pressed
+    val intent = Intent(this, MyService::class.java)
+    startService(intent)
+}
+
+
+
 
 class AlarmService : Service() {
     // A Service is a component in Android that runs in the background to perform long-running operations or handle tasks that don't require a user interface. It allows you to perform tasks that continue even if the app's UI is not visible or if the app is in the background or closed. ForegroundService, and yes, both AlarmManager and WorkManager are considered system services in Android too.
@@ -97,6 +113,28 @@ class AlarmService : Service() {
             // Ensure you handle the Service's lifecycle appropriately. The Service's lifecycle can be controlled by calling startService(Intent) and stopService(Intent) or by the system when the Service is no longer needed.
             startCountdown()
         }
+        // Return START_STICKY to indicate that the service should be restarted if it's killed by the system
+
+        // An alternative approach to handle service restarts without using START_STICKY is to schedule the service to be restarted at a specified time using AlarmManager. This approach is useful when you want the service to be restarted periodically, even if the system killed it.
+
+        //         val pendingIntent = PendingIntent.getService(
+        //            this,
+        //            0,
+        //            serviceIntent,
+        //            PendingIntent.FLAG_UPDATE_CURRENT
+        //        )
+        //        alarmManager.setRepeating(
+        //            AlarmManager.RTC,
+        //            System.currentTimeMillis() + intervalMillis,
+        //            intervalMillis,
+        //            pendingIntent
+        //        )
+
+        // If the return START_NOT_STICKY statement is removed, the default behavior would be used, which is equivalent to returning START_STICKY. Returning START_STICKY indicates that if the service is killed by the system (e.g., due to resource constraints), it should be automatically restarted as soon as resources become available.
+
+        //If a service is restarted due to START_STICKY or AlarmManager.setRepeating(), it will go through the service lifecycle again, which includes calling onCreate() and onStartCommand().
+        // AlarmManager.setRepeating(): When an alarm set with setRepeating() fires, it will trigger the onStartCommand() method of the specified service. If the service was already running, the same instance of the service will be used, and onStartCommand() will be called again with the new Intent provided by the alarm. In this case, the onCreate() method will not be called again, as the service is already created and running.
+
         return START_NOT_STICKY
     }
 
