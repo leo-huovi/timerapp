@@ -8,8 +8,12 @@ import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Build
 import android.os.IBinder
+import android.view.View
+import android.widget.TextView
 import androidx.core.app.NotificationCompat
+import com.example.timerapp.MainActivity.MySingleton
 
+private lateinit var myTextView: TextView
 class AlarmService : Service() {
     private var mediaPlayer: MediaPlayer? = null
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
@@ -23,6 +27,8 @@ class AlarmService : Service() {
     }
 
     override fun onDestroy() {
+
+
         super.onDestroy()
         if (mediaPlayer != null) {
             mediaPlayer!!.stop()
