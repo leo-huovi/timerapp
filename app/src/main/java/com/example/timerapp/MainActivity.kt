@@ -5,9 +5,12 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
+import android.net.Uri
 import android.os.Bundle
+import android.os.PowerManager
+import android.provider.Settings
 import android.view.View
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -28,9 +31,27 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var timerViewModel: TimerViewModel
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+
+
+        val intent = Intent()
+        val packageName = this.packageName
+        val pm = getSystemService(POWER_SERVICE) as PowerManager
+
+
+
+        if (pm.isIgnoringBatteryOptimizations(packageName)) intent.action =
+            Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS else { /*from   w w  w. ja  v a 2 s . com*/
+            intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+            intent.data = Uri.parse("package:$packageName")
+
+        }
+        startActivity(intent)
+
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -41,11 +62,25 @@ class MainActivity : AppCompatActivity() {
             updateTimerText(timeInMillis)
         })
 
-        timerViewModel.startTimer(0)
 
-
+        if (savedInstanceState != null) {
+            timerViewModel.restoreInstanceState(savedInstanceState)
+        } else {
+            timerViewModel.startTimer(0)
         }
+
+    }
         // Set a click listener on a button to start the timer with a specified time
+
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        timerViewModel.saveInstanceState(outState)
+    }
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        setContentView(R.layout.activity_main)
+    }
 
     private fun updateTimerText(timeInMillis: Long) {
         val format = SimpleDateFormat("mm:ss", Locale.getDefault())
@@ -64,7 +99,7 @@ class MainActivity : AppCompatActivity() {
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(this, AlarmReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarm_time, pendingIntent)
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarm_time, pendingIntent)
         Toast.makeText(this, "Alarm set for 5 minutes later.", Toast.LENGTH_SHORT).show()
         timerViewModel.resetTimer(delay.toLong())
 
@@ -75,7 +110,7 @@ class MainActivity : AppCompatActivity() {
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(this, AlarmReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarm_time, pendingIntent)
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarm_time, pendingIntent)
         Toast.makeText(this, "Alarm set for 10 minutes later.", Toast.LENGTH_SHORT).show()
         timerViewModel.resetTimer(delay.toLong())
 
@@ -86,7 +121,7 @@ class MainActivity : AppCompatActivity() {
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(this, AlarmReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarm_time.toLong(), pendingIntent)
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarm_time.toLong(), pendingIntent)
         Toast.makeText(this, "Alarm set for 15 minutes later.", Toast.LENGTH_SHORT).show()
         timerViewModel.resetTimer(delay.toLong())
 
@@ -98,7 +133,7 @@ class MainActivity : AppCompatActivity() {
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(this, AlarmReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarm_time.toLong(), pendingIntent)
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarm_time.toLong(), pendingIntent)
         Toast.makeText(this, "Alarm set for 20 minutes later.", Toast.LENGTH_SHORT).show()
         timerViewModel.resetTimer(delay.toLong())
 
