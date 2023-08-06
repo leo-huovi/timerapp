@@ -13,7 +13,7 @@ class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
 
         val pm = context.getSystemService(Context.POWER_SERVICE) as PowerManager
-        val wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AlarmWakeLock")
+        val wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "app:alarmwakeclock")
         //Acquire the lock
         //Acquire the lock
         wl.acquire()

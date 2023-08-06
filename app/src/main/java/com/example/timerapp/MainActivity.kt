@@ -15,11 +15,16 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.work.Constraints
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequest
 import com.example.timerapp.databinding.ActivityMainBinding
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.concurrent.TimeUnit
 
+import androidx.work.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -38,19 +43,6 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        val intent = Intent()
-        val packageName = this.packageName
-        val pm = getSystemService(POWER_SERVICE) as PowerManager
-
-
-
-        if (pm.isIgnoringBatteryOptimizations(packageName)) intent.action =
-            Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS else { /*from   w w  w. ja  v a 2 s . com*/
-            intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
-            intent.data = Uri.parse("package:$packageName")
-
-        }
-        startActivity(intent)
 
 
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -72,6 +64,29 @@ class MainActivity : AppCompatActivity() {
     }
         // Set a click listener on a button to start the timer with a specified time
 
+    private var myWorkerRequest: WorkRequest? = null
+
+    private fun enqueueMyWorkerWithDelay(delay: Long) {
+        // Cancel the previous work request if it exists
+        myWorkerRequest?.let {
+            WorkManager.getInstance(this).cancelWorkById(it.id)
+        }
+
+        // Create constraints (if needed)
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.NOT_REQUIRED)
+            .build()
+
+        // Create the one-time work request
+        val workRequest = OneTimeWorkRequest.Builder(MyWorker::class.java)
+            .setInitialDelay(delay, TimeUnit.MILLISECONDS)
+            .setConstraints(constraints)
+            .build()
+
+        // Enqueue the work and save the request for later use
+        WorkManager.getInstance(this).enqueue(workRequest)
+        myWorkerRequest = workRequest
+    }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -93,50 +108,33 @@ class MainActivity : AppCompatActivity() {
         timerViewModel.stopTimer()
     }
 
+
     fun startAlarm_5(view: View?) {
-        val delay: Int = 5 * 60 * 1000 // 10 minutes in milliseconds
-        val alarm_time: Long = System.currentTimeMillis() + delay
-        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(this, AlarmReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarm_time, pendingIntent)
+        val delay: Long = 5 * 60 * 1000 // 10 minutes in milliseconds
+        enqueueMyWorkerWithDelay(delay)
+        timerViewModel.resetTimer(delay)
         Toast.makeText(this, "Alarm set for 5 minutes later.", Toast.LENGTH_SHORT).show()
-        timerViewModel.resetTimer(delay.toLong())
-
     }
+
     fun startAlarm_10(view: View?) {
-        val delay: Int = 10 * 60 * 1000 // 10 minutes in milliseconds
-        val alarm_time: Long = System.currentTimeMillis() + delay
-        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(this, AlarmReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarm_time, pendingIntent)
+        val delay: Long = 10 * 60 * 1000 // 10 minutes in milliseconds
+        enqueueMyWorkerWithDelay(delay)
+        timerViewModel.resetTimer(delay)
         Toast.makeText(this, "Alarm set for 10 minutes later.", Toast.LENGTH_SHORT).show()
-        timerViewModel.resetTimer(delay.toLong())
-
     }
-    fun startAlarm_15(view: View?) {
-        val delay: Int = 15 * 60 * 1000 // 10 minutes in milliseconds
-        val alarm_time: Long = System.currentTimeMillis() + delay
-        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(this, AlarmReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarm_time.toLong(), pendingIntent)
-        Toast.makeText(this, "Alarm set for 15 minutes later.", Toast.LENGTH_SHORT).show()
-        timerViewModel.resetTimer(delay.toLong())
 
+    fun startAlarm_15(view: View?) {
+        val delay: Long = 15 * 60 * 1000 // 15 minutes in milliseconds
+        enqueueMyWorkerWithDelay(delay)
+        timerViewModel.resetTimer(delay)
+        Toast.makeText(this, "Alarm set for 15 minutes later.", Toast.LENGTH_SHORT).show()
     }
 
     fun startAlarm_20(view: View?) {
-        val delay: Int = 20 * 60 * 1000 // 10 minutes in milliseconds
-        val alarm_time: Long = System.currentTimeMillis() + delay
-        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(this, AlarmReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarm_time.toLong(), pendingIntent)
+        val delay: Long = 20 * 60 * 1000 // 20 minutes in milliseconds
+        enqueueMyWorkerWithDelay(delay)
+        timerViewModel.resetTimer(delay)
         Toast.makeText(this, "Alarm set for 20 minutes later.", Toast.LENGTH_SHORT).show()
-        timerViewModel.resetTimer(delay.toLong())
-
     }
 
 

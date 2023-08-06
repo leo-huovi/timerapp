@@ -32,6 +32,10 @@
                 <action android:name="android.intent.action.SCREEN_ON" />
             </intent-filter>
         </receiver>
+        <receiver
+            android:name=".AlarmCompletedReceiver"
+            android:enabled="true"
+            android:exported="false" />
         <service android:name=".AlarmService"
             android:enabled="true"
             android:exported="true"/>
