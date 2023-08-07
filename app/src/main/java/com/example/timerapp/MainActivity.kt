@@ -106,7 +106,13 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun enqueueMyWorkerWithDelay(delay: Long) {
-        // Cancel the previous work request if it exists
+        // Cancel the previous CoroutineWorker if it exists
+        if (myWorkerRequest != null) {
+            WorkManager.getInstance(this).cancelWorkById(myWorkerRequest!!.id)
+            myWorkerRequest = null
+        }
+
+        // Cancel the AlarmService if it is running
         if (isServiceRunning(AlarmService::class.java)) {
             stopAlarmService()
         }
