@@ -1,6 +1,9 @@
 package com.example.timerapp
 
+import AlarmService
+import MyWorker
 import TimerViewModel
+import android.app.ActivityManager
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
@@ -66,26 +69,19 @@ class MainActivity : AppCompatActivity() {
 
     private var myWorkerRequest: WorkRequest? = null
 
-    private fun enqueueMyWorkerWithDelay(delay: Long) {
-        // Cancel the previous work request if it exists
-        myWorkerRequest?.let {
-            WorkManager.getInstance(this).cancelWorkById(it.id)
+    private fun isServiceRunning(serviceClass: Class<*>): Boolean {
+        val manager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        for (service in manager.getRunningServices(Int.MAX_VALUE)) {
+            if (serviceClass.name == service.service.className) {
+                return true
+            }
         }
+        return false
+    }
 
-        // Create constraints (if needed)
-        val constraints = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.NOT_REQUIRED)
-            .build()
-
-        // Create the one-time work request
-        val workRequest = OneTimeWorkRequest.Builder(MyWorker::class.java)
-            .setInitialDelay(delay, TimeUnit.MILLISECONDS)
-            .setConstraints(constraints)
-            .build()
-
-        // Enqueue the work and save the request for later use
-        WorkManager.getInstance(this).enqueue(workRequest)
-        myWorkerRequest = workRequest
+    private fun stopAlarmService() {
+        val stopIntent = Intent(this, AlarmService::class.java)
+        stopService(stopIntent)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -109,8 +105,36 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    private fun enqueueMyWorkerWithDelay(delay: Long) {
+        // Cancel the previous work request if it exists
+        if (isServiceRunning(AlarmService::class.java)) {
+            stopAlarmService()
+        }
+
+        // Create constraints (if needed)
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.NOT_REQUIRED)
+            .build()
+
+        // Pass the delay as an input data for MyWorker
+        val inputData = Data.Builder()
+            .putLong("delay", delay)
+            .build()
+
+        // Create the one-time work request
+        val workRequest = OneTimeWorkRequest.Builder(MyWorker::class.java)
+            .setInputData(inputData) // Pass the input data with delay
+            .setConstraints(constraints)
+            .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, delay * 2, TimeUnit.MILLISECONDS)
+            .build()
+
+        // Enqueue the work and save the request for later use
+        WorkManager.getInstance(this).enqueue(workRequest)
+        myWorkerRequest = workRequest
+    }
+
     fun startAlarm_5(view: View?) {
-        val delay: Long = 5 * 60 * 1000 // 10 minutes in milliseconds
+        val delay: Long = (5 * 60 * 1000).toLong() // 5 minutes in milliseconds
         enqueueMyWorkerWithDelay(delay)
         timerViewModel.resetTimer(delay)
         Toast.makeText(this, "Alarm set for 5 minutes later.", Toast.LENGTH_SHORT).show()
@@ -124,18 +148,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun startAlarm_15(view: View?) {
-        val delay: Long = 15 * 60 * 1000 // 15 minutes in milliseconds
+        val delay: Long = 15 * 60 * 1000 // 10 minutes in milliseconds
         enqueueMyWorkerWithDelay(delay)
         timerViewModel.resetTimer(delay)
         Toast.makeText(this, "Alarm set for 15 minutes later.", Toast.LENGTH_SHORT).show()
     }
-
     fun startAlarm_20(view: View?) {
-        val delay: Long = 20 * 60 * 1000 // 20 minutes in milliseconds
+        val delay: Long = 20 * 60 * 1000 // 10 minutes in milliseconds
         enqueueMyWorkerWithDelay(delay)
         timerViewModel.resetTimer(delay)
         Toast.makeText(this, "Alarm set for 20 minutes later.", Toast.LENGTH_SHORT).show()
     }
-
 
 }
