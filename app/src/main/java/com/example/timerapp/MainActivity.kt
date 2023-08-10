@@ -21,8 +21,6 @@
     import java.util.Locale
 
     class MainActivity : AppCompatActivity() {
-
-        private val isTimerRunning: Boolean
         private var alarmManager: AlarmManager? = null
         private var pendingIntent: PendingIntent? = null
         private var alarmPlayer: MediaPlayer? = null
@@ -66,45 +64,25 @@
         fun playAlarmIn5Minutes(view: View?) {
             var delay = 5
             scheduleAlarm(delay)
-            if (isTimerRunning) {
-                timerViewModel.resetTimer(seconds * 1000L)
-            } else {
-                isTimerRunning = true
-                timerViewModel.startTimer(delay * 1000L)
-            }
+            timerViewModel.resetTimer(delay * 60 * 1000L)
         }
 
         fun playAlarmIn10Minutes(view: View?) {
             var delay = 10
             scheduleAlarm(delay)
-            if (isTimerRunning) {
-                timerViewModel.resetTimer(seconds * 1000L)
-            } else {
-                isTimerRunning = true
-                timerViewModel.startTimer(delay * 1000L)
-            }
+            timerViewModel.resetTimer(delay * 60 * 1000L)
         }
 
         fun playAlarmIn15Minutes(view: View?) {
             var delay = 15
             scheduleAlarm(delay)
-            if (isTimerRunning) {
-                timerViewModel.resetTimer(seconds * 1000L)
-            } else {
-                isTimerRunning = true
-                timerViewModel.startTimer(delay * 1000L)
-            }
+            timerViewModel.resetTimer(delay * 60 * 1000L)
         }
 
         fun playAlarmIn20Minutes(view: View?) {
             var delay = 20
             scheduleAlarm(delay)
-            if (isTimerRunning) {
-                timerViewModel.resetTimer(seconds * 1000L)
-            } else {
-                isTimerRunning = true
-                timerViewModel.startTimer(delay * 1000L)
-            }
+            timerViewModel.resetTimer(delay * 60 * 1000L)
         }
 
         private fun scheduleAlarm(seconds: Int) {
@@ -112,7 +90,7 @@
             cancelAlarm()
 
             // Calculate the alarm time in milliseconds
-            val timeInMillis = System.currentTimeMillis() + seconds * 1000
+            val timeInMillis = System.currentTimeMillis() +  seconds * 60 * 1000
 
             // Create an intent to launch the AlarmReceiver
             val intent = Intent(this, AlarmReceiver::class.java)
