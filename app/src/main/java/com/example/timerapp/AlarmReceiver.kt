@@ -1,47 +1,30 @@
 package com.example.timerapp
 
-import AlarmService
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.os.Build
-import android.os.PowerManager
-
+import android.media.MediaPlayer
+import com.example.timerapp.R
 
 class AlarmReceiver : BroadcastReceiver() {
+    private var alarmPlayer: MediaPlayer? = null
     override fun onReceive(context: Context, intent: Intent) {
+        // Create a new MediaPlayer instance
+        alarmPlayer = MediaPlayer.create(context, R.raw.alarm)
 
-        val pm = context.getSystemService(Context.POWER_SERVICE) as PowerManager
-        val wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "app:alarmwakeclock")
-        //Acquire the lock
-        //Acquire the lock
-        wl.acquire()
+        // Set a listener to release the MediaPlayer resources when the alarm finishes playing
+        alarmPlayer!!.setOnCompletionListener { stopAlarm() }
 
+        // Start playing the alarm sound
+        alarmPlayer!!.start()
+    }
 
-        // Create a notification channel for Foreground Service (required for API level 26 and above)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channelId = "timer_channel"
-            val channelName = "Timer Service Channel"
-            val notificationManager =
-                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            val channel = NotificationChannel(
-                channelId,
-                channelName,
-                NotificationManager.IMPORTANCE_DEFAULT
-            )
-            notificationManager.createNotificationChannel(channel)
-        }
-        //Release the lock
-        wl.release();
-
-        // Start the Foreground Service
-        val serviceIntent = Intent(context, AlarmService::class.java)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            context.startForegroundService(serviceIntent)
-        } else {
-            context.startService(serviceIntent)
+    private fun stopAlarm() {
+        // Stop and release the MediaPlayer resources
+        if (alarmPlayer != null) {
+            alarmPlayer!!.stop()
+            alarmPlayer!!.release()
+            alarmPlayer = null
         }
     }
 }

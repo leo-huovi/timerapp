@@ -1,9 +1,8 @@
-// TimerViewModel.kt
-import android.os.Bundle
-import android.os.CountDownTimer
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import android.os.CountDownTimer
+import java.lang.ref.WeakReference
 
 class TimerViewModel : ViewModel() {
 
@@ -31,6 +30,7 @@ class TimerViewModel : ViewModel() {
 
     fun stopTimer() {
         countDownTimer.cancel()
+
     }
 
     private fun createCountDownTimer(startTimeInMillis: Long) {
@@ -41,6 +41,7 @@ class TimerViewModel : ViewModel() {
 
             override fun onFinish() {
                 _currentTime.value = 0
+
             }
         }
     }
@@ -50,18 +51,4 @@ class TimerViewModel : ViewModel() {
         stopTimer()
     }
 
-
-    fun saveInstanceState(outState: Bundle) {
-        outState.putLong("currentTime", _currentTime.value ?: 0L)
-    }
-
-    fun restoreInstanceState(savedInstanceState: Bundle?) {
-        val savedTime = savedInstanceState?.getLong("currentTime", startTimeInMillis) ?: startTimeInMillis
-        if (countDownTimer != null) {
-            countDownTimer.cancel()
-        }
-        _currentTime.value = savedTime
-        createCountDownTimer(savedTime)
-        countDownTimer.start()
-    }
 }
