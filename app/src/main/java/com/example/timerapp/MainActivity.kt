@@ -1,24 +1,31 @@
     package com.example.timerapp
 
     import TimerViewModel
-    import androidx.lifecycle.ViewModelProvider
+    import android.Manifest
+    import android.accessibilityservice.AccessibilityService
     import android.app.AlarmManager
     import android.app.PendingIntent
+    import android.content.Context
     import android.content.Intent
     import android.content.pm.PackageManager
     import android.media.MediaPlayer
     import android.os.Bundle
+    import android.provider.Settings
+    import android.text.TextUtils.SimpleStringSplitter
+    import android.util.Log
     import android.view.View
+    import android.view.accessibility.AccessibilityEvent
     import androidx.appcompat.app.AppCompatActivity
     import androidx.core.app.ActivityCompat
     import androidx.core.content.ContextCompat
-    import android.Manifest
     import androidx.lifecycle.Observer
-    import com.example.timerapp.AlarmReceiver
+    import androidx.lifecycle.ViewModelProvider
     import com.example.timerapp.databinding.ActivityMainBinding
     import java.text.SimpleDateFormat
+    import java.util.Calendar
     import java.util.Date
     import java.util.Locale
+
 
     class MainActivity : AppCompatActivity() {
         private var alarmManager: AlarmManager? = null
@@ -53,6 +60,8 @@
             // Initialize the AlarmManager
             alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
         }
+
+
 
 
         private fun updateTimerText(timeInMillis: Long) {
@@ -90,15 +99,23 @@
             cancelAlarm()
 
             // Calculate the alarm time in milliseconds
-            val timeInMillis = System.currentTimeMillis() +  seconds * 60 * 1000
+            val timeInMillis = System.currentTimeMillis() + seconds * 60 * 1000
+
+            // Create an instance of Calendar and set the desired alarm time
+            val alarmTime = Calendar.getInstance()
+            alarmTime.timeInMillis = timeInMillis
 
             // Create an intent to launch the AlarmReceiver
             val intent = Intent(this, AlarmReceiver::class.java)
             val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0)
 
-            // Schedule the alarm using AlarmManager
-            alarmManager?.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, timeInMillis, pendingIntent)
+            // Create an instance of AlarmClockInfo with the desired alarm time and PendingIntent
+            val alarmClockInfo = AlarmManager.AlarmClockInfo(alarmTime.timeInMillis, pendingIntent)
+
+            // Set the alarm using setAlarmClock
+            alarmManager?.setAlarmClock(alarmClockInfo, pendingIntent)
         }
+
         private fun cancelAlarm() {
             // Cancel any previous alarm
             if (alarmManager != null && pendingIntent != null) {

@@ -4,11 +4,16 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
-import com.example.timerapp.R
+import android.os.PowerManager
+
 
 class AlarmReceiver : BroadcastReceiver() {
     private var alarmPlayer: MediaPlayer? = null
     override fun onReceive(context: Context, intent: Intent) {
+
+        val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+        var wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "LocationManagerService")
+        wakeLock.acquire()
         // Create a new MediaPlayer instance
         alarmPlayer = MediaPlayer.create(context, R.raw.alarm)
 
@@ -17,6 +22,8 @@ class AlarmReceiver : BroadcastReceiver() {
 
         // Start playing the alarm sound
         alarmPlayer!!.start()
+
+        wakeLock.release()
     }
 
     private fun stopAlarm() {
