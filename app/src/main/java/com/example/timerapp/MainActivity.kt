@@ -7,6 +7,7 @@
     import android.app.PendingIntent
     import android.content.Context
     import android.content.Intent
+    import android.content.SharedPreferences
     import android.content.pm.PackageManager
     import android.media.MediaPlayer
     import android.os.Bundle
@@ -15,6 +16,7 @@
     import android.util.Log
     import android.view.View
     import android.view.accessibility.AccessibilityEvent
+    import android.widget.TextView
     import androidx.appcompat.app.AppCompatActivity
     import androidx.core.app.ActivityCompat
     import androidx.core.content.ContextCompat
@@ -27,25 +29,42 @@
     import java.util.Locale
 
 
+
+
     class MainActivity : AppCompatActivity() {
+        private lateinit var sharedPref: SharedPreferences
         private var alarmManager: AlarmManager? = null
         private var pendingIntent: PendingIntent? = null
         private var alarmPlayer: MediaPlayer? = null
+        private var delay: Int = 0
 
         private lateinit var binding: ActivityMainBinding
         private lateinit var timerViewModel: TimerViewModel
+
+
 
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
             setContentView(R.layout.activity_main)
 
+
             binding = ActivityMainBinding.inflate(layoutInflater)
             setContentView(binding.root)
             timerViewModel = ViewModelProvider(this).get(TimerViewModel::class.java)
 
+            sharedPref = this.getSharedPreferences("mysharedpref", Context.MODE_PRIVATE)
+
+            val max_count = sharedPref.getInt("max_count", 0)
+            binding.progressBar.setProgress( max_count % 10 )
+            binding.textView2.text = max_count.toString()
+
+
             // Observe the timer LiveData and update the TextView
             timerViewModel.currentTime.observe(this, Observer { timeInMillis ->
                 updateTimerText(timeInMillis)
+                updateUI(timeInMillis)
+
+
             })
 
 
@@ -62,6 +81,26 @@
         }
 
 
+        fun updateUI(timeInMillis: Long) {
+            // Update the UI with the counter values
+            // var current_count = findViewById<TextView>(R.id.textView_2)
+            // current_count.text = max_count.toString()
+
+            var remaining_seconds = timeInMillis % 1000
+
+            if (remaining_seconds == 1L) {
+
+                var score = delay % 5
+
+                val max_count = sharedPref.getInt("max_count", 0) + score
+                val editor = sharedPref.edit()
+                editor.putInt("max_count", max_count)
+                editor.apply()
+                binding.textView2.text = max_count.toString()
+                binding.progressBar.setProgress( max_count % 10 )
+            }
+        }
+
 
 
         private fun updateTimerText(timeInMillis: Long) {
@@ -71,35 +110,36 @@
         }
 
         fun playAlarmIn5Minutes(view: View?) {
-            var delay = 5
+            delay = 5
             scheduleAlarm(delay)
             timerViewModel.resetTimer(delay * 60 * 1000L)
         }
 
         fun playAlarmIn10Minutes(view: View?) {
-            var delay = 10
+            delay = 10
             scheduleAlarm(delay)
             timerViewModel.resetTimer(delay * 60 * 1000L)
         }
 
         fun playAlarmIn15Minutes(view: View?) {
-            var delay = 15
+            delay = 15
             scheduleAlarm(delay)
             timerViewModel.resetTimer(delay * 60 * 1000L)
         }
 
         fun playAlarmIn20Minutes(view: View?) {
-            var delay = 20
+            delay = 20
             scheduleAlarm(delay)
             timerViewModel.resetTimer(delay * 60 * 1000L)
         }
 
-        private fun scheduleAlarm(seconds: Int) {
+        private fun scheduleAlarm(minutes: Int) {
             // Cancel any previous alarm
             cancelAlarm()
 
+
             // Calculate the alarm time in milliseconds
-            val timeInMillis = System.currentTimeMillis() + seconds * 60 * 1000
+            val timeInMillis = System.currentTimeMillis() + minutes * 60 * 1000
 
             // Create an instance of Calendar and set the desired alarm time
             val alarmTime = Calendar.getInstance()
