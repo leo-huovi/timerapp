@@ -2,6 +2,7 @@ package com.example.timerapp
 
 import TimerViewModel
 import android.Manifest
+import android.R
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
@@ -10,24 +11,28 @@ import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.timerapp.databinding.ActivityMainBinding
-import java.io.File
+import com.example.timerapp.databinding.ItemImageBinding
+import com.jakewharton.threetenabp.AndroidThreeTen
+import org.threeten.bp.LocalDate
+import org.threeten.bp.format.DateTimeFormatter
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import kotlin.random.Random
-import org.threeten.bp.LocalDate
-import org.threeten.bp.format.DateTimeFormatter
-import com.jakewharton.threetenabp.AndroidThreeTen
-
+import com.example.timerapp.R.layout.item_image
 
 class MainActivity : AppCompatActivity() {
     private lateinit var sharedPref: SharedPreferences
@@ -87,7 +92,8 @@ class MainActivity : AppCompatActivity() {
                     .toString() + "," + sharedPref.getString("pokemon_gender_of_day", "⚥")
                     .toString()
                 editor.putString(yesterday, last_pokemon)
-                editor.apply()
+                // editor.apply()
+                editor.commit()
 
                 hatched = false
 
@@ -98,7 +104,8 @@ class MainActivity : AppCompatActivity() {
                     .toString() + "," + sharedPref.getString("pokemon_gender_of_day", "⚥")
                     .toString()
                 editor.putString(yesterday, last_pokemon)
-                editor.apply()
+                // editor.apply()
+                editor.commit()
 
                 hatched = false
             }
@@ -123,21 +130,28 @@ class MainActivity : AppCompatActivity() {
             val gender_now = listOf("♂","♀")[Random.nextInt(0,2)]
 
             editor.putString("nature_of_day", nature_chosen_now)
-            editor.apply()
+            // editor.apply()
+            editor.commit()
             editor.putString("pokemon_of_day", pokemon_chosen_now)
-            editor.apply()
+            // editor.apply()
+            editor.commit()
             editor.putString("pokemon_image_of_day", pokemon_image_now)
-            editor.apply()
+            // editor.apply()
+            editor.commit()
             editor.putString("pokemon_gender_of_day", gender_now)
-            editor.apply()
+            // editor.apply()
+            editor.commit()
             editor.putInt("today_exp", exp_now)
-            editor.apply()
+            // editor.apply()
+            editor.commit()
 
 
             editor.putString("last_date", today)
-            editor.apply()
+            // editor.apply()
+            editor.commit()
             editor.putInt("max_count", 0)
-            editor.apply()
+            // editor.apply()
+            editor.commit()
 
 
             pokemon_of_today = "Egg"
@@ -225,7 +239,8 @@ class MainActivity : AppCompatActivity() {
 
             var new_max_count = sharedPref.getInt("max_count", 0) + score
             editor.putInt("max_count", new_max_count)
-            editor.apply()
+            // editor.apply()
+            editor.commit()
             max_count = sharedPref.getInt("max_count", 0)
 
             if (max_count >= today_exp) {
@@ -361,3 +376,31 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+class ImageAdapter( // List of drawable resource IDs
+    private val images: List<Int>
+) :
+    RecyclerView.Adapter<ImageAdapter.ImageViewHolder>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
+        val itemView: View = LayoutInflater.from(parent.context)
+            .inflate(item_image, parent, false)
+        return ImageViewHolder(itemView)
+    }
+
+    override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
+        val imageResId = images[position]
+        holder.imageView.setImageResource(imageResId)
+    }
+
+    override fun getItemCount(): Int {
+        return images.size
+    }
+
+    internal class ImageViewHolder(itemView: View) : ViewHolder(itemView) {
+        var imageView: ImageView
+
+        init {
+            imageView = itemView.findViewById<ImageView>(imageView)
+        }
+    }
+}
