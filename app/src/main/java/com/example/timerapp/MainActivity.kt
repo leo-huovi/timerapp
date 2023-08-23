@@ -2,7 +2,6 @@ package com.example.timerapp
 
 import TimerViewModel
 import android.Manifest
-import android.R
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
@@ -11,19 +10,14 @@ import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.media.MediaPlayer
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.timerapp.databinding.ActivityMainBinding
-import com.example.timerapp.databinding.ItemImageBinding
 import com.jakewharton.threetenabp.AndroidThreeTen
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
@@ -32,7 +26,6 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import kotlin.random.Random
-import com.example.timerapp.R.layout.item_image
 
 class MainActivity : AppCompatActivity() {
     private lateinit var sharedPref: SharedPreferences
@@ -318,7 +311,7 @@ class MainActivity : AppCompatActivity() {
 
             // Create an intent to launch the AlarmReceiver
             val intent = Intent(this, AlarmReceiver::class.java)
-            val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0)
+            val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
             // Create an instance of AlarmClockInfo with the desired alarm time and PendingIntent
             val alarmClockInfo = AlarmManager.AlarmClockInfo(alarmTime.timeInMillis, pendingIntent)
@@ -375,32 +368,8 @@ class MainActivity : AppCompatActivity() {
                 )
             }
         }
-    }
 
-class ImageAdapter( // List of drawable resource IDs
-    private val images: List<Int>
-) :
-    RecyclerView.Adapter<ImageAdapter.ImageViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
-        val itemView: View = LayoutInflater.from(parent.context)
-            .inflate(item_image, parent, false)
-        return ImageViewHolder(itemView)
-    }
 
-    override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
-        val imageResId = images[position]
-        holder.imageView.setImageResource(imageResId)
-    }
 
-    override fun getItemCount(): Int {
-        return images.size
-    }
-
-    internal class ImageViewHolder(itemView: View) : ViewHolder(itemView) {
-        var imageView: ImageView
-
-        init {
-            imageView = itemView.findViewById<ImageView>(imageView)
-        }
-    }
 }
+

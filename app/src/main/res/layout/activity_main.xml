@@ -5,7 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFF5EE"
+    android:orientation="vertical"
     tools:context=".MainActivity">
+
 
 
     <ImageButton
@@ -151,14 +153,5 @@
         app:srcCompat="@drawable/egg" />
 
 
-    <view class="androidx.appcompat.app.AlertController$RecycleListView"
-        android:layout_below="@id/startButton_15"
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:spanCount="14"
-        app:orientation="horizontal"
-        tools:listitem="@layout/item_image" />
 
 </RelativeLayout>
