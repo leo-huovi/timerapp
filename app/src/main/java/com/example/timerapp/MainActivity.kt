@@ -106,11 +106,11 @@ class MainActivity : AppCompatActivity() {
 
 
             if (sharedPref.getString(yesterday, "day,50,pokemon0,Egg,Neutral,Gender").toString()?.split(",")?.get(2) != "egg") {
-                val exp_now = Random.nextInt(32,46)
+                val exp_now = Random.nextInt(34,46)
                 editor.putInt("today_exp", exp_now)
                 editor.commit()
             } else {
-                val exp_now = Random.nextInt(27,39)
+                val exp_now = Random.nextInt(27,34)
                 editor.putInt("today_exp", exp_now)
                 editor.commit()
             }
