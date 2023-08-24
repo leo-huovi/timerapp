@@ -34,7 +34,6 @@ class MainActivity : AppCompatActivity() {
     private var alarmManager: AlarmManager? = null
     private var pendingIntent: PendingIntent? = null
     private var alarmPlayer: MediaPlayer? = null
-    private var hatched: Boolean = false
     private var delay: Int = 0
     private val date_format = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
@@ -78,7 +77,7 @@ class MainActivity : AppCompatActivity() {
 
         if (yesterday != today) {
 
-            if (hatched) {
+            if (sharedPref.getInt("max_count", 0) > sharedPref.getInt("today_exp", 10)) {
                 var last_pokemon: String = yesterday + "," + sharedPref.getInt("max_count", 0)
                     .toString() + "," + sharedPref.getString("pokemon_image_of_day", "egg")
                     .toString() + "," + sharedPref.getString("pokemon_of_day", "Egg")
@@ -89,7 +88,6 @@ class MainActivity : AppCompatActivity() {
                 // editor.apply()
                 editor.commit()
 
-                hatched = false
 
             } else {
 
@@ -101,7 +99,6 @@ class MainActivity : AppCompatActivity() {
                 // editor.apply()
                 editor.commit()
 
-                hatched = false
             }
 
 
@@ -169,7 +166,6 @@ class MainActivity : AppCompatActivity() {
             binding.progressBar.max = today_exp
 
             if (max_count >= today_exp) {
-                hatched = true
                 pokemon_of_today = sharedPref.getString("pokemon_of_day", "Egg").toString()
                 nature_of_today = sharedPref.getString("nature_of_day", "Neutral").toString()
                 gender_of_today = sharedPref.getString("pokemon_gender_of_day", "⚥").toString()
@@ -233,12 +229,18 @@ class MainActivity : AppCompatActivity() {
 
         val startDate = LocalDate.now().minusDays(20)
         val endDate = LocalDate.now()
+        //val endDate = LocalDate.now().minusDays(1)
         val date_format = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
         val images = mutableListOf<Int>()
 
         var currentDate = endDate
         while (!currentDate.isBefore(startDate)) {
+
+            //Flush the old history:
+            //editor.putString(currentDate.format(date_format).toString(), "day,50,empty,Egg,Neutral,Gender")
+            // editor.commit()
+
             val pokemon_image_on_grid: String = sharedPref.getString(currentDate.format(date_format).toString(), "day,50,pokemon0,Egg,Neutral,Gender")?.split(",")?.get(2) ?: ""
             val resourceId = resources.getIdentifier(pokemon_image_on_grid, "drawable", packageName)
             images.add(resourceId)
@@ -285,7 +287,6 @@ class MainActivity : AppCompatActivity() {
 
 
             if (max_count >= today_exp) {
-                hatched = true
 
                 var today_exp = sharedPref.getInt("today_exp", 10)
                 binding.progressBar.max = today_exp
@@ -318,6 +319,7 @@ class MainActivity : AppCompatActivity() {
         private fun updateTimerText(timeInMillis: Long) {
 
 
+
             val format = SimpleDateFormat("mm:ss", Locale.getDefault())
             val formattedTime = format.format(Date(timeInMillis))
             binding.textView.text = formattedTime
@@ -325,8 +327,8 @@ class MainActivity : AppCompatActivity() {
 
             // binding.textView.text = LocalDate.now().format(date_format).toString()
             // binding.textView.text = sharedPref.getString("2023-08-16", "Egg").toString()?.split(",")?.get(2)
-            // binding.textView.textSize = 5.toFloat()
-            // binding.textView.text = sharedPref.getString("2023-08-13", "egg") + "   " + sharedPref.getString("2023-08-14", "egg") + "   " + sharedPref.getString("2023-08-15", "egg")  + "   " + sharedPref.getString("2023-08-16", "egg") + "   " + sharedPref.getString("2023-08-17", "egg") + "   " + sharedPref.getString("2023-08-18", "egg") + "   " + sharedPref.getString("2023-08-19", "egg") + "   " + sharedPref.getString("2023-08-20", "egg") + "   " + sharedPref.getString("2023-08-21", "egg")
+            binding.textView.textSize = 5.toFloat()
+            binding.textView.text = sharedPref.getString("2023-08-13", "egg") + "   " + sharedPref.getString("2023-08-14", "egg") + "   " + sharedPref.getString("2023-08-15", "egg")  + "   " + sharedPref.getString("2023-08-16", "egg") + "   " + sharedPref.getString("2023-08-17", "egg") + "   " + sharedPref.getString("2023-08-18", "egg") + "   " + sharedPref.getString("2023-08-19", "egg") + "   " + sharedPref.getString("2023-08-20", "egg") + "   " + sharedPref.getString("2023-08-24", "egg")
         }
 
         fun playAlarmIn5Minutes(view: View?) {
