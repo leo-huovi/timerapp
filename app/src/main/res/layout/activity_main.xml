@@ -19,9 +19,9 @@
         android:layout_marginStart="15dp"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="40dp"
+        android:layout_marginEnd="15dp"
         android:layout_marginRight="25dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="10dp"
         android:background="#E1CDF4"
         android:onClick="playAlarmIn5Minutes"
         android:scaleType="centerInside"
@@ -38,7 +38,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="15dp"
         android:layout_marginRight="15dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="10dp"
         android:background="#E1CDF4"
         android:onClick="playAlarmIn10Minutes"
         android:scaleType="centerInside"
@@ -71,6 +71,8 @@
         android:layout_alignParentRight="true"
         android:layout_marginStart="40dp"
         android:layout_marginLeft="40dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginEnd="15dp"
         android:layout_marginTop="5dp"
         android:background="#E1CDF4"
         android:onClick="playAlarmIn20Minutes"
@@ -137,12 +139,6 @@
         android:textSize="18dp"
         android:visibility="visible" />
 
-    <View
-        android:id="@+id/spacing_2"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
 
     <ImageView
         android:layout_centerHorizontal="true"
@@ -152,6 +148,25 @@
         android:layout_height="wrap_content"
         app:srcCompat="@drawable/egg" />
 
+    <View
+        android:id="@+id/spacing_2"
+        android:layout_width="10dp"
+        android:layout_height="200dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_centerHorizontal="true" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        class="androidx.appcompat.app.AlertController$RecycleListView"
+        android:layout_width="386dp"
+        android:layout_height="200dp"
+        android:layout_below="@id/startButton_15"
+        android:layout_marginTop="4dp"
+        android:layout_marginLeft="11dp"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="7"
+        tools:listitem="@layout/item_image" />
 
 </RelativeLayout>
