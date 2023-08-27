@@ -12,7 +12,6 @@ import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
@@ -28,7 +27,7 @@ import java.util.Locale
 import kotlin.random.Random
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
     private var imageAdapter: ImageAdapter? = null
     private lateinit var sharedPref: SharedPreferences
     private var alarmManager: AlarmManager? = null
@@ -49,19 +48,38 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+
         AndroidThreeTen.init(this)
 
 
-
-
-
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        timerViewModel = ViewModelProvider(this).get(TimerViewModel::class.java)
+        val themes = arrayOf(
+            R.style.Theme_BlueTimer,
+            R.style.Theme_PinkTimer,
+            R.style.Theme_OrangeTimer,
+            R.style.Theme_BlackTimer,
+            R.style.Theme_GreenTimer,
+            R.style.Theme_WhiteTimer,
+            R.style.Theme_PurpleTimer,
+            R.style.Theme_RedTimer
+        )
 
         sharedPref = this.getSharedPreferences("mysharedpref", Context.MODE_PRIVATE)
+
+        fun setCurrentTheme(current_theme: Int) {
+            setTheme(themes[current_theme])
+        }
+
+
+
+        fun switchTheme() {
+            var currentThemeIndex = sharedPref.getInt("themeIndex", 0)
+            currentThemeIndex = (currentThemeIndex + 1) % themes.size
+            sharedPref.edit().putInt("themeIndex", currentThemeIndex).commit()
+            setCurrentTheme(currentThemeIndex)
+        }
+
+
+
         val editor = sharedPref.edit()
 
         //Pokemon logic
@@ -72,20 +90,38 @@ class MainActivity : AppCompatActivity() {
         //          editor.putInt("max_count", 0)
 //            editor.apply()
 
+        // Manually change past days if update failed:
+        // editor.putString("2023-08-26", "2023-08-26,30,pokemon472,Gliscor,Hasty,♀")
+        // editor.commit()
+
+
         val today = LocalDate.now().format(date_format)
         val yesterday = sharedPref.getString("last_date", LocalDate.of(2000, 1, 1).format(date_format))
 
-        if (yesterday != today) {
 
-            if (sharedPref.getInt("max_count", 0) > sharedPref.getInt("today_exp", 10)) {
+        var hatched = sharedPref.getBoolean("hatched", false)
+
+        var currentThemeIndex = sharedPref.getInt("themeIndex", 0)
+        setCurrentTheme(currentThemeIndex)
+
+        if (yesterday != today) {
+            switchTheme()
+
+            if (hatched) {
+
                 var last_pokemon: String = yesterday + "," + sharedPref.getInt("max_count", 0)
                     .toString() + "," + sharedPref.getString("pokemon_image_of_day", "egg")
                     .toString() + "," + sharedPref.getString("pokemon_of_day", "Egg")
                     .toString() + "," + sharedPref.getString("nature_of_day", "Neutral")
                     .toString() + "," + sharedPref.getString("pokemon_gender_of_day", "⚥")
                     .toString()
+                editor.putBoolean("hatched", false)
+                editor.commit()
                 editor.putString(yesterday, last_pokemon)
                 // editor.apply()
+                editor.commit()
+                val exp_now = Random.nextInt(34,46)
+                editor.putInt("today_exp", exp_now)
                 editor.commit()
 
 
@@ -98,19 +134,12 @@ class MainActivity : AppCompatActivity() {
                 editor.putString(yesterday, last_pokemon)
                 // editor.apply()
                 editor.commit()
-
-            }
-
-
-            if (sharedPref.getString(yesterday, "day,50,pokemon0,Egg,Neutral,Gender").toString()?.split(",")?.get(2) != "egg") {
-                val exp_now = Random.nextInt(34,46)
-                editor.putInt("today_exp", exp_now)
-                editor.commit()
-            } else {
                 val exp_now = Random.nextInt(27,34)
                 editor.putInt("today_exp", exp_now)
                 editor.commit()
+
             }
+
 
             val pokemon_names_all = getString(R.string.all_pokemon_names)
             var values = pokemon_names_all.split(",").map { it.trim() }
@@ -152,7 +181,6 @@ class MainActivity : AppCompatActivity() {
 
 
             pokemon_of_today = "Egg"
-            binding.textView2.text = pokemon_of_today
             pokemon_image_today = "egg"
 
             max_count = sharedPref.getInt("max_count", 0)
@@ -163,27 +191,41 @@ class MainActivity : AppCompatActivity() {
 
             max_count = sharedPref.getInt("max_count", 0)
             today_exp = sharedPref.getInt("today_exp", 10)
-            binding.progressBar.max = today_exp
 
             if (max_count >= today_exp) {
+                editor.putBoolean("hatched", true)
+                editor.commit()
                 pokemon_of_today = sharedPref.getString("pokemon_of_day", "Egg").toString()
                 nature_of_today = sharedPref.getString("nature_of_day", "Neutral").toString()
                 gender_of_today = sharedPref.getString("pokemon_gender_of_day", "⚥").toString()
 
-                binding.textView2.text = pokemon_of_today + "\n(" + gender_of_today + ") "  + nature_of_today
+                // binding.textView2.text = pokemon_of_today + "\n(" + gender_of_today + ") "  + nature_of_today
                 pokemon_image_today = sharedPref.getString("pokemon_image_of_day", "egg").toString()
 
 
 
             } else {
                 pokemon_of_today = "Egg"
-                binding.textView2.text = pokemon_of_today
+                // binding.textView2.text = pokemon_of_today
                 pokemon_image_today = "egg"
             }
 
 
 
+
         }
+
+
+        
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        timerViewModel = ViewModelProvider(this).get(TimerViewModel::class.java)
+
+
+        binding.textView2.text = pokemon_of_today
 
 
         var resourceId = resources.getIdentifier(pokemon_image_today, "drawable", packageName)
@@ -287,6 +329,8 @@ class MainActivity : AppCompatActivity() {
 
 
             if (max_count >= today_exp) {
+                editor.putBoolean("hatched", true)
+                editor.commit()
 
                 var today_exp = sharedPref.getInt("today_exp", 10)
                 binding.progressBar.max = today_exp
@@ -327,8 +371,10 @@ class MainActivity : AppCompatActivity() {
 
             // binding.textView.text = LocalDate.now().format(date_format).toString()
             // binding.textView.text = sharedPref.getString("2023-08-16", "Egg").toString()?.split(",")?.get(2)
-            binding.textView.textSize = 5.toFloat()
-            binding.textView.text = sharedPref.getString("2023-08-13", "egg") + "   " + sharedPref.getString("2023-08-14", "egg") + "   " + sharedPref.getString("2023-08-15", "egg")  + "   " + sharedPref.getString("2023-08-16", "egg") + "   " + sharedPref.getString("2023-08-17", "egg") + "   " + sharedPref.getString("2023-08-18", "egg") + "   " + sharedPref.getString("2023-08-19", "egg") + "   " + sharedPref.getString("2023-08-20", "egg") + "   " + sharedPref.getString("2023-08-24", "egg")
+
+            //DEBUG    Check data of past days:
+            // binding.textView.textSize = 7.toFloat()
+            // binding.textView.text = "   " + sharedPref.getString("2023-08-24", "egg")+ "   " + sharedPref.getString("2023-08-25", "egg")            + "   " + sharedPref.getString("2023-08-26", "egg")
         }
 
         fun playAlarmIn5Minutes(view: View?) {
@@ -426,6 +472,7 @@ class MainActivity : AppCompatActivity() {
                 )
             }
         }
+
 
 
 

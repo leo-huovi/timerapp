@@ -2,4 +2,98 @@
 <resources>
 
     <style name="Theme.TImerApp" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.PurpleTimer" parent="Theme.TImerApp">
+        <item type="color" name="android:button">@color/purple_buttonBackground</item>
+        <item type="color" name="android:colorBackground">@color/purple_appBackground</item>
+        <item type="color" name="android:progressBackgroundTint">@color/purple_progressBarEmpty</item>
+        <item type="color" name="android:progress">@color/purple_progressBarFull</item>
+        <item type="color" name="android:colorPrimary">@color/purple_textTimer</item>
+        <item type="color" name="android:colorAccent">@color/purple_textResults</item>
+    </style>
+
+    <style name="Theme.RedTimer" parent="Theme.TImerApp">
+
+        <item type="color" name="android:button">@color/red_buttonBackground</item>
+        <item type="color" name="android:colorBackground">@color/red_appBackground</item>
+        <item type="color" name="android:progressBackgroundTint">@color/red_progressBarEmpty</item>
+        <item type="color" name="android:progressTint">@color/red_progressBarFull</item>
+        <item type="color" name="android:colorPrimary">@color/red_textTimer</item>
+        <item type="color" name="android:colorAccent">@color/red_textResults</item>
+    </style>
+
+
+    <style name="Theme.YellowTimer" parent="Theme.TImerApp">
+
+        <item type="color" name="android:button">@color/yellow_buttonBackground</item>
+        <item type="color" name="android:colorBackground">@color/yellow_appBackground</item>
+        <item type="color" name="android:progressBackgroundTint">@color/yellow_progressBarEmpty</item>
+        <item type="color" name="android:progressTint">@color/yellow_progressBarFull</item>
+        <item type="color" name="android:colorPrimary">@color/yellow_textTimer</item>
+        <item type="color" name="android:colorAccent">@color/yellow_textResults</item>
+    </style>
+
+    <style name="Theme.OrangeTimer" parent="Theme.TImerApp">
+
+        <item type="color" name="android:button">@color/orange_buttonBackground</item>
+        <item type="color" name="android:colorBackground">@color/orange_appBackground</item>
+        <item type="color" name="android:progressBackgroundTint">@color/orange_progressBarEmpty</item>
+        <item type="color" name="android:progressTint">@color/orange_progressBarFull</item>
+        <item type="color" name="android:colorPrimary">@color/orange_textTimer</item>
+        <item type="color" name="android:colorAccent">@color/orange_textResults</item>
+    </style>
+
+
+    <style name="Theme.BlackTimer" parent="Theme.TImerApp">
+
+        <item type="color" name="android:button">@color/black_buttonBackground</item>
+        <item type="color" name="android:colorBackground">@color/black_appBackground</item>
+        <item type="color" name="android:progressBackgroundTint">@color/black_progressBarEmpty</item>
+        <item type="color" name="android:progressTint">@color/black_progressBarFull</item>
+        <item type="color" name="android:colorPrimary">@color/black_textTimer</item>
+        <item type="color" name="android:colorAccent">@color/black_textResults</item>
+    </style>
+
+
+
+    <style name="Theme.WhiteTimer" parent="Theme.TImerApp">
+
+        <item type="color" name="android:button">@color/white_buttonBackground</item>
+        <item type="color" name="android:colorBackground">@color/white_appBackground</item>
+        <item type="color" name="android:progressBackgroundTint">@color/white_progressBarEmpty</item>
+        <item type="color" name="android:progressTint">@color/white_progressBarFull</item>
+        <item type="color" name="android:colorPrimary">@color/white_textTimer</item>
+        <item type="color" name="android:colorAccent">@color/white_textResults</item>
+    </style>
+
+    <style name="Theme.PinkTimer" parent="Theme.TImerApp">
+
+        <item type="color" name="android:button">@color/pink_buttonBackground</item>
+        <item type="color" name="android:colorBackground">@color/pink_appBackground</item>
+        <item type="color" name="android:progressBackgroundTint">@color/pink_progressBarEmpty</item>
+        <item type="color" name="android:progressTint">@color/pink_progressBarFull</item>
+        <item type="color" name="android:colorPrimary">@color/pink_textTimer</item>
+        <item type="color" name="android:colorAccent">@color/pink_textResults</item>
+    </style>
+
+    <style name="Theme.BlueTimer" parent="Theme.TImerApp">
+
+        <item type="color" name="android:button">@color/blue_buttonBackground</item>
+        <item type="color" name="android:colorBackground">@color/blue_appBackground</item>
+        <item type="color" name="android:progressBackgroundTint">@color/blue_progressBarEmpty</item>
+        <item type="color" name="android:progressTint">@color/blue_progressBarFull</item>
+        <item type="color" name="android:colorPrimary">@color/blue_textTimer</item>
+        <item type="color" name="android:colorAccent">@color/blue_textResults</item>
+    </style>
+
+    <style name="Theme.GreenTimer" parent="Theme.TImerApp">
+
+        <item type="color" name="android:button">@color/green_buttonBackground</item>
+        <item type="color" name="android:colorBackground">@color/green_appBackground</item>
+        <item type="color" name="android:progressBackgroundTint">@color/green_progressBarEmpty</item>
+        <item type="color" name="android:progressTint">@color/green_progressBarFull</item>
+        <item type="color" name="android:colorPrimary">@color/green_textTimer</item>
+        <item type="color" name="android:colorAccent">@color/green_textResults</item>
+    </style>
+
 </resources>

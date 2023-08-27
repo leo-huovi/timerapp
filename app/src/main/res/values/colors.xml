@@ -7,4 +7,68 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="orange_appBackground">#fff2e6</color>
+    <color name="orange_buttonBackground">#E1CDF4</color>
+    <color name="orange_progressBarEmpty">#ffb477</color>
+    <color name="orange_progressBarFull">#ff8c1a</color>
+    <color name="orange_textTimer">#b36b44</color>
+    <color name="orange_textResults">#ffbf00</color>
+
+    <color name="red_appBackground">#ffe6e6</color>
+    <color name="red_buttonBackground">#E1CDF4</color>
+    <color name="red_progressBarEmpty">#f9ecec</color>
+    <color name="red_progressBarFull">#993333</color>
+    <color name="red_textTimer">#99004d</color>
+    <color name="red_textResults">#99004d</color>
+
+    <color name="black_appBackground">#333333</color>
+    <color name="black_buttonBackground">#E1CDF4</color>
+    <color name="black_progressBarEmpty">#c2d6d6</color>
+    <color name="black_progressBarFull">#e6e6ff</color>
+    <color name="black_textTimer">#e6e6e6</color>
+    <color name="black_textResults">#ffffff</color>
+
+    <color name="white_appBackground">#ffffff</color>
+    <color name="white_buttonBackground">#E1CDF4</color>
+    <color name="white_progressBarEmpty">#baBaca</color>
+    <color name="white_progressBarFull">#9699A9</color>
+    <color name="white_textTimer">#344344</color>
+    <color name="white_textResults">#8d9093</color>
+
+    <color name="yellow_appBackground">#FFFFF0</color>
+    <color name="yellow_buttonBackground">#E1CDF4</color>
+    <color name="yellow_progressBarEmpty">#ebebe0</color>
+    <color name="yellow_progressBarFull">#ffd966</color>
+    <color name="yellow_textTimer">#4d2600</color>
+    <color name="yellow_textResults">#666600</color>
+
+    <color name="green_appBackground">#BCDDCB</color>
+    <color name="green_buttonBackground">#E1CDF4</color>
+    <color name="green_progressBarEmpty">#9DC2BA</color>
+    <color name="green_progressBarFull">#88B99C</color>
+    <color name="green_textTimer">#006600</color>
+    <color name="green_textResults">#478778</color>
+
+    <color name="purple_appBackground">#ECEDFF</color>
+    <color name="purple_buttonBackground">#E1CDF4</color>
+    <color name="purple_progressBarEmpty">#aaaaca</color>
+    <color name="purple_progressBarFull">#9499b9</color>
+    <color name="purple_textTimer">#70558a</color>
+    <color name="purple_textResults">#CBC3EA</color>
+
+    <color name="pink_appBackground">#FFF5EE</color>
+    <color name="pink_buttonBackground">#E1CDF4</color>
+    <color name="pink_progressBarEmpty">#FFEEFF</color>
+    <color name="pink_progressBarFull">#EEC7EE</color>
+    <color name="pink_textTimer">#FF9999</color>
+    <color name="pink_textResults">#DDC0DD</color>
+
+    <color name="blue_appBackground">#DEEEEE</color>
+    <color name="blue_buttonBackground">#E1CDF4</color>
+    <color name="blue_progressBarEmpty">#D1DEEB</color>
+    <color name="blue_progressBarFull">#99BDDA</color>
+    <color name="blue_textTimer">#4682B4</color>
+    <color name="blue_textResults">#40B5AD</color>
+
 </resources>
