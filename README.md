@@ -8,8 +8,7 @@ This app was created as a practice project to learn how Android app development 
 
 ## Features
 
-- Set a timer for 5, 10, 15, or 20 minutes.
-- Play an alarm after the specified duration.
+- Set a timer for chosen number of minutes, and play an alarm after the specified duration.
 - Countdown timer that updates in real-time, and is able to wake up the phone when the timer reaches 0.
 - Change the theme of the app.
 - Save the maximum daily minutee count.
