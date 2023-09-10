@@ -1,5 +1,5 @@
 
-# An android kotlin timer app ⏰
+# A colorful timer app with multiple themes ⏰🎨 
 
 TimerApp is an Android application focused around the AlarmManager class, and colorful alarm buttons. that allows users to set timers and play alarms after a specified 
 duration. It also features a countdown timer that updates in real-time and allows users to play alarms at  different intervals.
