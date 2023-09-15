@@ -120,7 +120,7 @@ class MainActivity : BaseActivity() {
                 editor.putString(yesterday, last_pokemon)
                 // editor.apply()
                 editor.commit()
-                val exp_now = Random.nextInt(34,46)
+                val exp_now = Random.nextInt(20,30)
                 editor.putInt("today_exp", exp_now)
                 editor.commit()
 
@@ -134,7 +134,7 @@ class MainActivity : BaseActivity() {
                 editor.putString(yesterday, last_pokemon)
                 // editor.apply()
                 editor.commit()
-                val exp_now = Random.nextInt(27,34)
+                val exp_now = Random.nextInt(15,25)
                 editor.putInt("today_exp", exp_now)
                 editor.commit()
 
@@ -275,6 +275,7 @@ class MainActivity : BaseActivity() {
         val date_format = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
         val images = mutableListOf<Int>()
+        val levels = mutableListOf<String>()
 
         var currentDate = endDate
         while (!currentDate.isBefore(startDate)) {
@@ -282,15 +283,20 @@ class MainActivity : BaseActivity() {
             //Flush the old history:
             //editor.putString(currentDate.format(date_format).toString(), "day,50,empty,Egg,Neutral,Gender")
             // editor.commit()
+            val pokemon_level: String = sharedPref.getString(
+                currentDate.format(date_format).toString(),
+                "day,0,pokemon0,Egg,Neutral,Gender"
+            )?.split(",")?.get(1) ?: ""
 
             val pokemon_image_on_grid: String = sharedPref.getString(currentDate.format(date_format).toString(), "day,50,pokemon0,Egg,Neutral,Gender")?.split(",")?.get(2) ?: ""
             val resourceId = resources.getIdentifier(pokemon_image_on_grid, "drawable", packageName)
             images.add(resourceId)
+            levels.add(pokemon_level)
             currentDate = currentDate.minusDays(1)
         }
 
 
-        val imageAdapter = ImageAdapter(images)
+        val imageAdapter = ImageAdapter(images, levels)
         recyclerView.adapter = imageAdapter
 
 
@@ -299,9 +305,10 @@ class MainActivity : BaseActivity() {
 
 
     // Call this function to update the images
-    private fun updateImages(newImages: List<Int>) {
+    private fun updateImages(newImages: List<Int>, newLevels: List<String>) {
         // Update the images in the ImageAdapter
         imageAdapter?.images = newImages
+        imageAdapter?.texts = newLevels
 
         // Notify the adapter that the data has changed
         imageAdapter?.notifyDataSetChanged()
